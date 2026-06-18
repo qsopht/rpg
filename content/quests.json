@@ -1,0 +1,112 @@
+[
+  {
+    "id": "greenvale_wolf_culling",
+    "name": "Wolf Culling",
+    "description": "Slay 5 Gray Wolves prowling the plains.",
+    "kind": "kill",
+    "cadence": "one_time",
+    "region_id": "greenvale_plains",
+    "level_req": 1,
+    "requirements": { "target_type": "enemy", "target_id": "wolf", "count": 5 },
+    "rewards": { "gold": 25, "xp": 80, "items": [{ "item_id": "leather_cap", "qty": 1 }] }
+  },
+  {
+    "id": "greenvale_pelts",
+    "name": "Wolf Pelts for the Tanner",
+    "description": "Gather 8 Wolf Pelts.",
+    "kind": "gather",
+    "cadence": "daily",
+    "region_id": "greenvale_plains",
+    "level_req": 1,
+    "requirements": { "target_type": "item", "target_id": "wolf_pelt", "count": 8 },
+    "rewards": { "gold": 50, "xp": 60 }
+  },
+  {
+    "id": "explore_ironwood",
+    "name": "Into the Ironwood",
+    "description": "Step into Ironwood Forest for the first time.",
+    "kind": "explore",
+    "cadence": "one_time",
+    "region_id": "ironwood_forest",
+    "level_req": 4,
+    "requirements": { "target_type": "region", "target_id": "ironwood_forest", "count": 1 },
+    "rewards": { "gold": 30, "xp": 120 }
+  },
+  {
+    "id": "ironwood_goblin_pressure",
+    "name": "Goblin Pressure",
+    "description": "Slay 12 goblins in Ironwood Forest.",
+    "kind": "kill",
+    "cadence": "one_time",
+    "region_id": "ironwood_forest",
+    "level_req": 5,
+    "requirements": { "target_type": "enemy", "target_id": "goblin_scout", "count": 8 },
+    "rewards": { "gold": 90, "xp": 280, "items": [{ "item_id": "iron_sword", "qty": 1 }] }
+  },
+  {
+    "id": "ironwood_war_banner",
+    "name": "War Banner of the Warbringer",
+    "description": "Slay 6 Goblin Warriors.",
+    "kind": "kill",
+    "cadence": "weekly",
+    "region_id": "ironwood_forest",
+    "level_req": 8,
+    "requirements": { "target_type": "enemy", "target_id": "goblin_warrior", "count": 6 },
+    "rewards": { "gold": 200, "xp": 700, "items": [{ "item_id": "iron_chainmail", "qty": 1 }] }
+  },
+  {
+    "id": "ember_initiation",
+    "name": "Walk Through Fire",
+    "description": "Enter Ember Peaks.",
+    "kind": "explore",
+    "cadence": "one_time",
+    "region_id": "ember_peaks",
+    "level_req": 10,
+    "requirements": { "target_type": "region", "target_id": "ember_peaks", "count": 1 },
+    "rewards": { "gold": 100, "xp": 400 }
+  },
+  {
+    "id": "ember_shards_for_smith",
+    "name": "Ember Shards for the Smith",
+    "description": "Gather 10 Ember Shards.",
+    "kind": "gather",
+    "cadence": "daily",
+    "region_id": "ember_peaks",
+    "level_req": 10,
+    "requirements": { "target_type": "item", "target_id": "ember_shard", "count": 10 },
+    "rewards": { "gold": 220, "xp": 480 }
+  },
+  {
+    "id": "frostreach_initiation",
+    "name": "Beyond the Last Hearth",
+    "description": "Reach the Frostreach Tundra.",
+    "kind": "explore",
+    "cadence": "one_time",
+    "region_id": "frostreach_tundra",
+    "level_req": 15,
+    "requirements": { "target_type": "region", "target_id": "frostreach_tundra", "count": 1 },
+    "rewards": { "gold": 200, "xp": 800 }
+  },
+  {
+    "id": "frost_shards_for_priestess",
+    "name": "Cold Mercy",
+    "description": "Bring 8 Frost Shards.",
+    "kind": "gather",
+    "cadence": "daily",
+    "region_id": "frostreach_tundra",
+    "level_req": 15,
+    "requirements": { "target_type": "item", "target_id": "frost_shard", "count": 8 },
+    "rewards": { "gold": 380, "xp": 950 }
+  },
+  {
+    "id": "delivery_pelts_to_smith",
+    "name": "Delivery: Pelts to the Smith",
+    "description": "Hand over 3 Wolf Pelts to the smith in Greenvale.",
+    "kind": "deliver",
+    "cadence": "one_time",
+    "region_id": "greenvale_plains",
+    "level_req": 1,
+    "requirements": { "target_type": "item", "target_id": "wolf_pelt", "count": 3 },
+    "rewards": { "gold": 20, "xp": 40 }
+  }
+]

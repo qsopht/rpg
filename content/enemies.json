@@ -1,0 +1,107 @@
+[
+  {
+    "id": "wolf",
+    "name": "Gray Wolf",
+    "archetype": "beast",
+    "level": 2,
+    "stats": { "health": 35, "attack": 8, "defense": 2, "agility": 9, "magic": 0 },
+    "loot_table": [
+      { "item_id": "wolf_pelt", "weight": 60, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "fang", "weight": 30, "qty_min": 1, "qty_max": 2 },
+      { "item_id": "leather_cap", "weight": 5, "qty_min": 1, "qty_max": 1 }
+    ],
+    "xp_reward": 12,
+    "gold_reward_min": 1,
+    "gold_reward_max": 4
+  },
+  {
+    "id": "goblin_scout",
+    "name": "Goblin Scout",
+    "archetype": "humanoid",
+    "level": 4,
+    "stats": { "health": 50, "attack": 11, "defense": 4, "agility": 8, "magic": 0 },
+    "loot_table": [
+      { "item_id": "rusty_dagger", "weight": 40, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "linen_scraps", "weight": 50, "qty_min": 1, "qty_max": 3 },
+      { "item_id": "iron_sword", "weight": 5, "qty_min": 1, "qty_max": 1 }
+    ],
+    "xp_reward": 22,
+    "gold_reward_min": 3,
+    "gold_reward_max": 8
+  },
+  {
+    "id": "goblin_warrior",
+    "name": "Goblin Warrior",
+    "archetype": "humanoid",
+    "level": 8,
+    "stats": { "health": 110, "attack": 18, "defense": 9, "agility": 7, "magic": 0 },
+    "loot_table": [
+      { "item_id": "iron_sword", "weight": 25, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "iron_chainmail", "weight": 15, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "linen_scraps", "weight": 60, "qty_min": 2, "qty_max": 4 }
+    ],
+    "xp_reward": 60,
+    "gold_reward_min": 8,
+    "gold_reward_max": 18
+  },
+  {
+    "id": "skeleton_archer",
+    "name": "Skeleton Archer",
+    "archetype": "undead",
+    "level": 12,
+    "stats": { "health": 140, "attack": 24, "defense": 8, "agility": 12, "magic": 4 },
+    "loot_table": [
+      { "item_id": "bone_dust", "weight": 70, "qty_min": 1, "qty_max": 3 },
+      { "item_id": "shortbow", "weight": 20, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "ring_of_focus", "weight": 5, "qty_min": 1, "qty_max": 1 }
+    ],
+    "xp_reward": 110,
+    "gold_reward_min": 14,
+    "gold_reward_max": 30
+  },
+  {
+    "id": "bandit_thug",
+    "name": "Bandit Thug",
+    "archetype": "humanoid",
+    "level": 6,
+    "stats": { "health": 80, "attack": 14, "defense": 6, "agility": 7, "magic": 0 },
+    "loot_table": [
+      { "item_id": "small_health_potion", "weight": 40, "qty_min": 1, "qty_max": 2 },
+      { "item_id": "iron_sword", "weight": 20, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "leather_cap", "weight": 25, "qty_min": 1, "qty_max": 1 }
+    ],
+    "xp_reward": 40,
+    "gold_reward_min": 6,
+    "gold_reward_max": 14
+  },
+  {
+    "id": "fire_elemental",
+    "name": "Fire Elemental",
+    "archetype": "elemental",
+    "level": 14,
+    "stats": { "health": 180, "attack": 22, "defense": 12, "agility": 9, "magic": 18 },
+    "loot_table": [
+      { "item_id": "ember_shard", "weight": 70, "qty_min": 1, "qty_max": 2 },
+      { "item_id": "flame_rod", "weight": 12, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "ring_of_focus", "weight": 6, "qty_min": 1, "qty_max": 1 }
+    ],
+    "xp_reward": 180,
+    "gold_reward_min": 18,
+    "gold_reward_max": 40
+  },
+  {
+    "id": "frost_elemental",
+    "name": "Frost Elemental",
+    "archetype": "elemental",
+    "level": 18,
+    "stats": { "health": 240, "attack": 28, "defense": 14, "agility": 8, "magic": 22 },
+    "loot_table": [
+      { "item_id": "frost_shard", "weight": 70, "qty_min": 1, "qty_max": 3 },
+      { "item_id": "frost_rod", "weight": 10, "qty_min": 1, "qty_max": 1 },
+      { "item_id": "amulet_of_warding", "weight": 4, "qty_min": 1, "qty_max": 1 }
+    ],
+    "xp_reward": 290,
+    "gold_reward_min": 30,
+    "gold_reward_max": 65
+  }
+]

@@ -1,0 +1,46 @@
+# Node
+node_modules/
+dist/
+coverage/
+*.log
+.env
+.env.*
+!.env.example
+
+# Unity
+[Ll]ibrary/
+[Tt]emp/
+[Oo]bj/
+[Bb]uild/
+[Bb]uilds/
+[Ll]ogs/
+[Uu]ser[Ss]ettings/
+[Mm]emoryCaptures/
+*.csproj
+*.unityproj
+*.sln
+*.suo
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Addressables / Bee
+[Aa]ddressableAssetsData/
+[Ss]erverData/
+[Bb]ee*/
+
+# OS
+.DS_Store
+Thumbs.db
+docs/architecture.md
+docs/database.md
+docs/deploy-guide.md
+docs/dev-guide.md
+docs/roadmap.md
+docs/security.md

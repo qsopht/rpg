@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1; padding:16px;">
+        <engine:Label name="eventsBanner" style="background-color:rgba(160, 80, 0, 0.6); padding:6px; border-radius:6px; display:none; margin-bottom:8px;"/>
+        <engine:Label text="Regions" style="font-size:24px; margin-bottom:8px;"/>
+        <engine:ListView name="regions" style="flex-grow:1;" fixed-item-height="100" />
+    </engine:VisualElement>
+</engine:UXML>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1; padding:16px;">
+        <engine:Label text="Active quests" style="font-size:20px; margin-bottom:8px;"/>
+        <engine:ListView name="active" style="height:200px;" fixed-item-height="60"/>
+        <engine:Label text="Available" style="font-size:20px; margin-top:16px; margin-bottom:8px;"/>
+        <engine:ListView name="available" style="flex-grow:1;" fixed-item-height="80"/>
+    </engine:VisualElement>
+</engine:UXML>

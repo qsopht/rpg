@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1; padding:16px;">
+        <engine:Label name="name" style="font-size:24px;"/>
+        <engine:Label name="gold"/>
+        <engine:Label name="gems"/>
+        <engine:Label name="bio" style="margin-top:8px; white-space:normal;"/>
+    </engine:VisualElement>
+</engine:UXML>

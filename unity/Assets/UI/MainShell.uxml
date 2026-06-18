@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1;">
+        <engine:VisualElement name="header" style="flex-direction:row; padding:8px; background-color:rgba(0,0,0,0.5);">
+            <engine:Label text="Aetheria" style="font-size:18px; flex-grow:1;"/>
+            <engine:Button name="signout" text="Sign out" />
+        </engine:VisualElement>
+
+        <engine:VisualElement name="tabContent" style="flex-grow:1;" />
+
+        <engine:VisualElement name="tabbar" style="flex-direction:row; background-color:rgba(0,0,0,0.5);">
+            <engine:Button name="tab-world"       text="World"       style="flex-grow:1;"/>
+            <engine:Button name="tab-quests"      text="Quests"      style="flex-grow:1;"/>
+            <engine:Button name="tab-inventory"   text="Inventory"   style="flex-grow:1;"/>
+            <engine:Button name="tab-leaderboard" text="Leaderboard" style="flex-grow:1;"/>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

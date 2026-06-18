@@ -1,0 +1,22 @@
+/* Default theme — tweak in Unity's UI Builder for visuals. */
+:root {
+    --color-bg: rgb(20, 22, 28);
+    --color-card: rgba(255, 255, 255, 0.06);
+    --color-text: rgb(220, 220, 230);
+    --color-accent: rgb(220, 165, 90);
+    --color-rare: rgb(80, 160, 240);
+    --color-epic: rgb(170, 100, 220);
+    --color-legendary: rgb(255, 180, 60);
+}
+
+VisualElement { color: var(--color-text); }
+Label { color: var(--color-text); }
+Button {
+    background-color: var(--color-card);
+    border-radius: 6px;
+    padding: 8px 12px;
+    color: var(--color-text);
+}
+Button:hover { background-color: rgba(255,255,255,0.12); }
+TextField, DropdownField, Toggle { margin-bottom: 8px; }
+ProgressBar { height: 10px; margin-top: 2px; }

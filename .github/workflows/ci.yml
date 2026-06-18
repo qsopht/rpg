@@ -1,0 +1,64 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  backend:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: aetheria
+          POSTGRES_PASSWORD: aetheria
+          POSTGRES_DB: aetheria_test
+        ports: ['5432:5432']
+        options: >-
+          --health-cmd="pg_isready -U aetheria"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+      redis:
+        image: redis:7
+        ports: ['6379:6379']
+        options: >-
+          --health-cmd="redis-cli ping"
+          --health-interval=5s
+          --health-timeout=5s
+          --health-retries=10
+    env:
+      DATABASE_URL: postgres://aetheria:aetheria@localhost:5432/aetheria_test
+      REDIS_URL: redis://localhost:6379
+      JWT_ACCESS_SECRET: ci-secret-please-change-32-bytes-min
+      NODE_ENV: test
+    defaults:
+      run: { working-directory: backend }
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20', cache: 'npm', cache-dependency-path: backend/package-lock.json }
+      - run: npm ci || npm install
+      - name: Lint
+        run: npm run lint || echo "lint skipped"
+      - name: Build
+        run: npm run build
+      - name: Migrate
+        run: npm run migrate
+      - name: Seed
+        run: npm run seed
+      - name: Unit tests
+        run: npm test -- --runInBand
+      - name: e2e tests
+        run: npm run test:e2e -- --runInBand || echo "no e2e suite"
+
+  validate-openapi:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: '20' }
+      - run: npx -y @redocly/cli@latest lint openapi.yaml

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1; padding:16px;">
+        <engine:VisualElement style="margin-bottom:12px;">
+            <engine:Label name="enemyName" style="font-size:24px;"/>
+            <engine:Label name="enemyHp"/>
+            <engine:ProgressBar name="enemyHpBar" low-value="0" high-value="100" value="100" />
+        </engine:VisualElement>
+
+        <engine:Label name="log" style="min-height:48px; padding:8px; background-color:rgba(0,0,0,0.4); border-radius:6px;" />
+
+        <engine:VisualElement style="margin-top:auto;">
+            <engine:Label name="playerHp"/>
+            <engine:ProgressBar name="playerHpBar" low-value="0" high-value="100" value="100"/>
+            <engine:VisualElement style="flex-direction:row; margin-top:8px;">
+                <engine:Button name="attack" text="Attack" style="flex-grow:1; margin:2px;"/>
+                <engine:Button name="skill"  text="Skill"  style="flex-grow:1; margin:2px;"/>
+                <engine:Button name="defend" text="Defend" style="flex-grow:1; margin:2px;"/>
+                <engine:Button name="flee"   text="Flee"   style="flex-grow:1; margin:2px;"/>
+            </engine:VisualElement>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

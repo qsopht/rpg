@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1; justify-content:center; align-items:center; padding:24px;">
+        <engine:Label text="Create your hero" style="font-size:32px; margin-bottom:16px;"/>
+        <engine:VisualElement style="width:360px; padding:16px; background-color:rgba(0,0,0,0.4); border-radius:8px;">
+            <engine:TextField name="name" label="Name" />
+            <engine:DropdownField name="class" label="Class" />
+            <engine:Button name="create" text="Embark" style="margin-top:16px;"/>
+            <engine:Label name="error" style="color:#ff7070; margin-top:8px; min-height:18px;"/>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

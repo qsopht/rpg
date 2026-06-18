@@ -1,0 +1,69 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: aetheria
+      POSTGRES_PASSWORD: aetheria
+      POSTGRES_DB: aetheria
+    # Host port 5433 because a Windows postgres service typically owns 5432.
+    # The API container connects via the internal docker network at postgres:5432
+    # (see DATABASE_URL below) — only this host mapping changes.
+    ports: ["5433:5432"]
+    volumes:
+      - aetheria_pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U aetheria"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    restart: unless-stopped
+    command: ["redis-server", "--appendonly", "yes"]
+    # Bumped off 6379 in case a host-side Redis/Memurai owns it. API container
+    # still uses redis:6379 over the internal network.
+    ports: ["6380:6379"]
+    volumes:
+      - aetheria_redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  api:
+    build:
+      context: ..
+      dockerfile: backend/Dockerfile
+    restart: unless-stopped
+    # Run migrations + seed before the API takes traffic. Seed is idempotent
+    # (ON CONFLICT DO UPDATE), so it's safe on every boot.
+    # NB: list form keeps the chained script as a single argv to sh -c.
+    command:
+      - sh
+      - -c
+      - "node dist/database/migrate.js && node dist/database/seed.js && node dist/main.js"
+    environment:
+      # production so knex's prod config (loadExtensions: ['.js']) is used —
+      # skipping the .d.ts files that nest build emits alongside .js
+      NODE_ENV: production
+      LOG_PRETTY: "true"
+      PORT: 3000
+      LOG_LEVEL: debug
+      DATABASE_URL: postgres://aetheria:aetheria@postgres:5432/aetheria
+      REDIS_URL: redis://redis:6379
+      JWT_ACCESS_SECRET: dev-secret-please-change-32-bytes-min
+      JWT_ACCESS_TTL: 15m
+      JWT_REFRESH_TTL: 30d
+      CORS_ORIGINS: http://localhost:5173,capacitor://localhost
+      CONTENT_DIR: /app/content
+    depends_on:
+      postgres: { condition: service_healthy }
+      redis: { condition: service_healthy }
+    ports: ["3000:3000"]
+
+volumes:
+  aetheria_pg:
+  aetheria_redis:

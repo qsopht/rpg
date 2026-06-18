@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1; padding:16px;">
+        <engine:Label text="Inventory" style="font-size:24px; margin-bottom:8px;"/>
+        <engine:Label name="empty" text="Your pack is empty." style="opacity:0.7; display:none;"/>
+        <engine:ListView name="items" style="flex-grow:1;" fixed-item-height="38" />
+    </engine:VisualElement>
+</engine:UXML>

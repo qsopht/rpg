@@ -1,0 +1,706 @@
+openapi: 3.0.3
+info:
+  title: Aetheria API
+  description: |
+    REST API for the Aetheria shared-world mobile MMORPG.
+    All authenticated endpoints expect `Authorization: Bearer <accessToken>`.
+    All state-mutating endpoints are server-authoritative.
+  version: 0.1.0
+servers:
+  - url: http://localhost:3000
+    description: Local dev
+  - url: https://api.aetheria.example
+    description: Production
+
+security:
+  - bearerAuth: []
+
+tags:
+  - name: auth
+  - name: players
+  - name: characters
+  - name: items
+  - name: inventory
+  - name: regions
+  - name: quests
+  - name: combat
+  - name: guilds
+  - name: chat
+  - name: events
+  - name: marketplace
+  - name: leaderboards
+  - name: notifications
+  - name: analytics
+  - name: health
+
+paths:
+  /health/live:
+    get:
+      tags: [health]
+      security: []
+      responses: { '200': { description: OK } }
+  /health/ready:
+    get:
+      tags: [health]
+      security: []
+      responses: { '200': { description: OK } }
+
+  /auth/register:
+    post:
+      tags: [auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/RegisterRequest' }
+            examples:
+              hero:
+                value:
+                  email: "hero@example.com"
+                  password: "correcthorsebattery"
+                  displayName: "Lyra"
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResult' }
+        '409': { description: Email or display name already taken }
+
+  /auth/login:
+    post:
+      tags: [auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/LoginRequest' }
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/AuthResult' }
+        '401': { description: Invalid credentials }
+
+  /auth/google:
+    post:
+      tags: [auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [idToken]
+              properties:
+                idToken: { type: string, description: Google id_token (JWT) }
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/AuthResult' } } }
+
+  /auth/refresh:
+    post:
+      tags: [auth]
+      security: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [refreshToken]
+              properties: { refreshToken: { type: string } }
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/AuthResult' } } }
+
+  /auth/logout:
+    post:
+      tags: [auth]
+      responses: { '204': { description: Revoked } }
+
+  /players/me:
+    get:
+      tags: [players]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema: { $ref: '#/components/schemas/Player' }
+    patch:
+      tags: [players]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                avatarId: { type: string }
+                bio: { type: string, maxLength: 280 }
+      responses: { '200': { description: Updated } }
+
+  /players/{displayName}:
+    get:
+      tags: [players]
+      security: []
+      parameters:
+        - in: path
+          name: displayName
+          required: true
+          schema: { type: string }
+      responses:
+        '200': { description: Public profile }
+
+  /characters:
+    get:
+      tags: [characters]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Character' }
+    post:
+      tags: [characters]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CreateCharacterRequest' }
+            examples:
+              warrior:
+                value: { name: "Kael", class: "warrior" }
+      responses:
+        '201':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Character' } } }
+
+  /characters/{id}:
+    get:
+      tags: [characters]
+      parameters: [{ in: path, name: id, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/Character' } } }
+
+  /characters/{id}/region:
+    put:
+      tags: [characters]
+      parameters: [{ in: path, name: id, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [regionId]
+              properties: { regionId: { type: string } }
+      responses: { '200': { description: Region updated } }
+
+  /characters/{characterId}/inventory:
+    get:
+      tags: [inventory]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/InventoryEntry' }
+
+  /characters/{characterId}/inventory/equip:
+    post:
+      tags: [inventory]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [inventoryItemId]
+              properties: { inventoryItemId: { type: string, format: uuid } }
+      responses: { '200': { description: Equipped } }
+
+  /characters/{characterId}/inventory/unequip:
+    post:
+      tags: [inventory]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [slot]
+              properties: { slot: { type: string } }
+      responses: { '200': { description: Unequipped } }
+
+  /items:
+    get:
+      tags: [items]
+      security: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Item' }
+  /items/{id}:
+    get:
+      tags: [items]
+      security: []
+      parameters: [{ in: path, name: id, required: true, schema: { type: string } }]
+      responses: { '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Item' } } } } }
+
+  /regions:
+    get:
+      tags: [regions]
+      security: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/Region' }
+  /regions/{id}:
+    get:
+      tags: [regions]
+      security: []
+      parameters: [{ in: path, name: id, required: true, schema: { type: string } }]
+      responses: { '200': { content: { application/json: { schema: { $ref: '#/components/schemas/Region' } } } } }
+
+  /characters/{characterId}/quests/available:
+    get:
+      tags: [quests]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: OK } }
+  /characters/{characterId}/quests/active:
+    get:
+      tags: [quests]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: OK } }
+  /characters/{characterId}/quests/accept:
+    post:
+      tags: [quests]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questId]
+              properties: { questId: { type: string } }
+      responses: { '201': { description: Accepted } }
+  /characters/{characterId}/quests/abandon:
+    post:
+      tags: [quests]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questId]
+              properties: { questId: { type: string } }
+      responses: { '200': { description: Abandoned } }
+  /characters/{characterId}/quests/turn-in:
+    post:
+      tags: [quests]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [questId]
+              properties: { questId: { type: string } }
+      responses:
+        '200':
+          description: Rewards granted
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  rewards:
+                    type: object
+                    properties:
+                      gold: { type: integer }
+                      xp: { type: integer }
+                      items:
+                        type: array
+                        items: { type: object, properties: { item_id: { type: string }, qty: { type: integer } } }
+
+  /combat/start:
+    post:
+      tags: [combat]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/StartEncounterRequest' }
+      responses:
+        '201':
+          content: { application/json: { schema: { $ref: '#/components/schemas/EncounterStarted' } } }
+  /combat/{encounterId}/action:
+    post:
+      tags: [combat]
+      parameters: [{ in: path, name: encounterId, required: true, schema: { type: string, format: uuid } }]
+      requestBody:
+        content:
+          application/json:
+            schema: { $ref: '#/components/schemas/CombatActionRequest' }
+            examples:
+              attack: { value: { action: "attack" } }
+              skill:  { value: { action: "skill", skillId: "power_strike" } }
+              flee:   { value: { action: "flee" } }
+      responses:
+        '200':
+          content: { application/json: { schema: { $ref: '#/components/schemas/CombatActionResult' } } }
+  /combat/logs/{characterId}:
+    get:
+      tags: [combat]
+      parameters: [{ in: path, name: characterId, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Recent fight log } }
+
+  /guilds:
+    post:
+      tags: [guilds]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name, tag]
+              properties:
+                name: { type: string, minLength: 3, maxLength: 24 }
+                tag: { type: string, minLength: 2, maxLength: 6, pattern: '^[A-Z0-9]+$' }
+                description: { type: string }
+      responses: { '201': { description: Created } }
+  /guilds/me:
+    get: { tags: [guilds], responses: { '200': { description: Your guild or null } } }
+  /guilds/rankings:
+    get: { tags: [guilds], security: [], responses: { '200': { description: Top guilds by level } } }
+  /guilds/{id}:
+    get:
+      tags: [guilds]
+      parameters: [{ in: path, name: id, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Guild detail } }
+  /guilds/{id}/join:
+    post:
+      tags: [guilds]
+      parameters: [{ in: path, name: id, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Joined } }
+  /guilds/leave:
+    post: { tags: [guilds], responses: { '200': { description: Left } } }
+  /guilds/promote:
+    post:
+      tags: [guilds]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [playerId, rank]
+              properties:
+                playerId: { type: string, format: uuid }
+                rank: { type: string, enum: [officer, member] }
+      responses: { '200': { description: Updated } }
+
+  /chat/send:
+    post:
+      tags: [chat]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [channel, body]
+              properties:
+                channel: { type: string, enum: [global, guild, dm] }
+                recipientDisplayName: { type: string }
+                body: { type: string, maxLength: 280 }
+      responses: { '201': { description: Sent } }
+  /chat/global:
+    get:
+      tags: [chat]
+      parameters: [{ in: query, name: before, schema: { type: string, format: date-time } }]
+      responses: { '200': { description: Recent messages } }
+  /chat/guild/{guildId}:
+    get:
+      tags: [chat]
+      parameters:
+        - { in: path, name: guildId, required: true, schema: { type: string, format: uuid } }
+        - { in: query, name: before, schema: { type: string, format: date-time } }
+      responses: { '200': { description: Recent messages } }
+  /chat/dm/{otherDisplayName}:
+    get:
+      tags: [chat]
+      parameters:
+        - { in: path, name: otherDisplayName, required: true, schema: { type: string } }
+        - { in: query, name: before, schema: { type: string, format: date-time } }
+      responses: { '200': { description: DM thread } }
+
+  /events/current:
+    get:
+      tags: [events]
+      security: []
+      responses:
+        '200':
+          content:
+            application/json:
+              schema:
+                type: array
+                items: { $ref: '#/components/schemas/WorldEvent' }
+
+  /marketplace:
+    get:
+      tags: [marketplace]
+      parameters:
+        - { in: query, name: itemId, schema: { type: string } }
+        - { in: query, name: maxPrice, schema: { type: integer } }
+      responses: { '200': { description: Active listings } }
+  /marketplace/mine:
+    get: { tags: [marketplace], responses: { '200': { description: Your listings } } }
+  /marketplace/list:
+    post:
+      tags: [marketplace]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [inventoryItemId, quantity, priceGold]
+              properties:
+                inventoryItemId: { type: string, format: uuid }
+                quantity: { type: integer, minimum: 1 }
+                priceGold: { type: integer, minimum: 1 }
+      responses: { '201': { description: Listed } }
+  /marketplace/{id}/buy:
+    post:
+      tags: [marketplace]
+      parameters: [{ in: path, name: id, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Purchased } }
+  /marketplace/{id}/cancel:
+    post:
+      tags: [marketplace]
+      parameters: [{ in: path, name: id, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Cancelled } }
+
+  /leaderboards/{board}:
+    get:
+      tags: [leaderboards]
+      security: []
+      parameters:
+        - { in: path, name: board, required: true, schema: { type: string, enum: [xp_total, gold_total] } }
+        - { in: query, name: limit, schema: { type: integer, default: 50, maximum: 100 } }
+      responses: { '200': { description: Top characters } }
+  /leaderboards/{board}/rank/{characterId}:
+    get:
+      tags: [leaderboards]
+      parameters:
+        - { in: path, name: board, required: true, schema: { type: string, enum: [xp_total, gold_total] } }
+        - { in: path, name: characterId, required: true, schema: { type: string, format: uuid } }
+      responses: { '200': { description: This character's rank } }
+
+  /notifications:
+    get:
+      tags: [notifications]
+      parameters: [{ in: query, name: unreadOnly, schema: { type: boolean } }]
+      responses: { '200': { description: Notifications } }
+  /notifications/{id}/ack:
+    post:
+      tags: [notifications]
+      parameters: [{ in: path, name: id, required: true, schema: { type: string, format: uuid } }]
+      responses: { '200': { description: Acked } }
+
+  /analytics/track:
+    post:
+      tags: [analytics]
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [name]
+              properties:
+                name: { type: string }
+                properties: { type: object }
+                characterId: { type: string }
+                sessionId: { type: string }
+      responses: { '201': { description: Recorded } }
+
+components:
+  securitySchemes:
+    bearerAuth: { type: http, scheme: bearer, bearerFormat: JWT }
+  schemas:
+    RegisterRequest:
+      type: object
+      required: [email, password, displayName]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string, minLength: 10 }
+        displayName: { type: string, minLength: 3, maxLength: 24 }
+    LoginRequest:
+      type: object
+      required: [email, password]
+      properties:
+        email: { type: string, format: email }
+        password: { type: string }
+    AuthResult:
+      type: object
+      properties:
+        accessToken: { type: string }
+        refreshToken: { type: string }
+        user:
+          type: object
+          properties:
+            id: { type: string, format: uuid }
+            email: { type: string, format: email }
+            displayName: { type: string }
+    Player:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        displayName: { type: string }
+        avatarId: { type: string, nullable: true }
+        bio: { type: string, nullable: true }
+        gold: { type: integer }
+        gems: { type: integer }
+        lastSeenAt: { type: string, format: date-time }
+    Character:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        name: { type: string }
+        class: { type: string, enum: [warrior, ranger, mage] }
+        level: { type: integer }
+        xp: { type: integer }
+        xpToNext: { type: integer }
+        skillPoints: { type: integer }
+        stats: { $ref: '#/components/schemas/Stats' }
+        equipment: { type: object, additionalProperties: { type: string } }
+        currentRegionId: { type: string, nullable: true }
+    Stats:
+      type: object
+      properties:
+        health: { type: integer }
+        attack: { type: integer }
+        defense: { type: integer }
+        agility: { type: integer }
+        magic: { type: integer }
+    CreateCharacterRequest:
+      type: object
+      required: [name, class]
+      properties:
+        name: { type: string, minLength: 2, maxLength: 24 }
+        class: { type: string, enum: [warrior, ranger, mage] }
+    Item:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        kind: { type: string, enum: [weapon, armor, trinket, consumable, material, quest] }
+        rarity: { type: string, enum: [common, uncommon, rare, epic, legendary] }
+        slot: { type: string, nullable: true }
+        stats: { type: object, additionalProperties: { type: number } }
+        stack_max: { type: integer }
+        sell_price: { type: integer }
+        level_req: { type: integer }
+        tradeable: { type: boolean }
+    InventoryEntry:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        itemId: { type: string }
+        name: { type: string }
+        kind: { type: string }
+        rarity: { type: string }
+        slot: { type: string, nullable: true }
+        stats: { type: object, additionalProperties: { type: number } }
+        quantity: { type: integer }
+        isEquipped: { type: boolean }
+    Region:
+      type: object
+      properties:
+        id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        level_min: { type: integer }
+        level_max: { type: integer }
+        enemy_pool:
+          type: array
+          items:
+            type: object
+            properties: { enemy_id: { type: string }, weight: { type: integer } }
+    StartEncounterRequest:
+      type: object
+      required: [characterId, regionId]
+      properties:
+        characterId: { type: string, format: uuid }
+        regionId: { type: string }
+    EncounterStarted:
+      type: object
+      properties:
+        encounterId: { type: string, format: uuid }
+        enemy:
+          type: object
+          properties:
+            id: { type: string }
+            name: { type: string }
+            level: { type: integer }
+            archetype: { type: string }
+            stats: { $ref: '#/components/schemas/Stats' }
+        player: { $ref: '#/components/schemas/Stats' }
+        regionId: { type: string }
+    CombatActionRequest:
+      type: object
+      required: [action]
+      properties:
+        action: { type: string, enum: [attack, skill, defend, use_item, flee] }
+        skillId: { type: string, enum: [power_strike, arcane_bolt, aimed_shot] }
+        itemId: { type: string }
+    CombatActionResult:
+      type: object
+      properties:
+        status: { type: string, enum: [ongoing, victory, defeat, fled] }
+        encounterId: { type: string, format: uuid }
+        step:
+          type: object
+          properties:
+            round: { type: integer }
+            playerAction: { type: string }
+            playerDamage: { type: integer }
+            enemyAction: { type: string }
+            enemyDamage: { type: integer }
+            playerHp: { type: integer }
+            enemyHp: { type: integer }
+        state:
+          type: object
+          properties:
+            player: { $ref: '#/components/schemas/Stats' }
+            enemy: { $ref: '#/components/schemas/Stats' }
+        rewards:
+          type: object
+          properties:
+            xp: { type: integer }
+            gold: { type: integer }
+            loot:
+              type: array
+              items: { type: object, properties: { item_id: { type: string }, quantity: { type: integer } } }
+    WorldEvent:
+      type: object
+      properties:
+        id: { type: string, format: uuid }
+        template_id: { type: string }
+        name: { type: string }
+        description: { type: string }
+        status: { type: string, enum: [scheduled, active, ended] }
+        progress: { type: integer }
+        progress_goal: { type: integer }
+        region_id: { type: string, nullable: true }
+        starts_at: { type: string, format: date-time }
+        ends_at: { type: string, format: date-time }

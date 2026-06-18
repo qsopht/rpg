@@ -1,0 +1,17 @@
+# Build context = repo root. Keep the image lean.
+**/node_modules
+**/dist
+**/coverage
+**/.git
+**/*.log
+**/.env
+**/.env.*
+!**/.env.example
+
+# Unity client never ships in the API image
+unity/
+docs/
+infra/
+*.md
+openapi.yaml
+.github/

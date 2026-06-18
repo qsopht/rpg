@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement class="login-root" style="flex-grow:1; justify-content:center; align-items:center; padding:24px;">
+        <engine:Label text="Aetheria" style="font-size:48px; margin-bottom:16px;"/>
+        <engine:VisualElement class="card" style="width:360px; padding:16px; background-color:rgba(0,0,0,0.4); border-radius:8px;">
+            <engine:TextField name="email" label="Email" />
+            <engine:TextField name="password" label="Password" />
+            <engine:TextField name="displayName" label="Display name" />
+            <engine:Toggle name="registerMode" label="New player? Register" style="margin-top:8px;"/>
+            <engine:Button name="submit" text="Sign in" style="margin-top:16px;"/>
+            <engine:Label name="error" style="color:#ff7070; margin-top:8px; min-height:18px;"/>
+        </engine:VisualElement>
+    </engine:VisualElement>
+</engine:UXML>

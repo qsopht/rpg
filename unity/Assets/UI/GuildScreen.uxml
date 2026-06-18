@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<engine:UXML xmlns:engine="UnityEngine.UIElements">
+    <engine:VisualElement style="flex-grow:1; padding:16px;">
+        <engine:Label name="guildName" style="font-size:24px;"/>
+        <engine:Label name="guildTag" style="opacity:0.8; margin-bottom:8px;"/>
+        <engine:Label text="Members" style="font-size:18px; margin-top:8px;"/>
+        <engine:Label name="members" style="white-space:normal;"/>
+    </engine:VisualElement>
+</engine:UXML>

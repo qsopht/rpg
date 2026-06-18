@@ -1,0 +1,44 @@
+[
+  {
+    "id": "goblin_invasion",
+    "name": "Goblin Invasion",
+    "description": "Goblin warbands pour out of Ironwood. Slay them to drive them back!",
+    "region_id": "ironwood_forest",
+    "progress_goal": 5000,
+    "duration_hours": 6,
+    "scoring": { "enemy_id": "goblin_warrior", "per_kill": 10 },
+    "rewards": {
+      "tier_1": { "min_contribution": 1, "gold": 50, "xp": 200 },
+      "tier_2": { "min_contribution": 50, "gold": 300, "xp": 800, "items": [{ "item_id": "iron_chainmail", "qty": 1 }] },
+      "tier_3": { "min_contribution": 200, "gold": 1500, "xp": 3000, "items": [{ "item_id": "ring_of_focus", "qty": 1 }] }
+    }
+  },
+  {
+    "id": "ancient_dragon_awakening",
+    "name": "Ancient Dragon Awakening",
+    "description": "An ember-scaled wyrm stirs in Ember Peaks. Strike against its minions!",
+    "region_id": "ember_peaks",
+    "progress_goal": 10000,
+    "duration_hours": 12,
+    "scoring": { "enemy_id": "fire_elemental", "per_kill": 25 },
+    "rewards": {
+      "tier_1": { "min_contribution": 1, "gold": 100, "xp": 400 },
+      "tier_2": { "min_contribution": 100, "gold": 500, "xp": 1500, "items": [{ "item_id": "flame_rod", "qty": 1 }] },
+      "tier_3": { "min_contribution": 400, "gold": 3000, "xp": 6000, "items": [{ "item_id": "amulet_of_warding", "qty": 1 }] }
+    }
+  },
+  {
+    "id": "treasure_rush",
+    "name": "Treasure Rush",
+    "description": "Bandits hoarded a season of loot. Hunt them down across the plains!",
+    "region_id": "greenvale_plains",
+    "progress_goal": 3000,
+    "duration_hours": 4,
+    "scoring": { "enemy_id": "bandit_thug", "per_kill": 15 },
+    "rewards": {
+      "tier_1": { "min_contribution": 1, "gold": 30, "xp": 100 },
+      "tier_2": { "min_contribution": 30, "gold": 200, "xp": 500 },
+      "tier_3": { "min_contribution": 120, "gold": 800, "xp": 1800, "items": [{ "item_id": "iron_sword", "qty": 1 }] }
+    }
+  }
+]

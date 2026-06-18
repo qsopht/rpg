@@ -1,0 +1,51 @@
+[
+  {
+    "id": "greenvale_plains",
+    "name": "Greenvale Plains",
+    "description": "Rolling green hills west of Aetheria. Wolves roam the meadows; bandits set ambushes near the old kingsroad.",
+    "level_min": 1,
+    "level_max": 6,
+    "enemy_pool": [
+      { "enemy_id": "wolf", "weight": 60 },
+      { "enemy_id": "goblin_scout", "weight": 30 },
+      { "enemy_id": "bandit_thug", "weight": 10 }
+    ]
+  },
+  {
+    "id": "ironwood_forest",
+    "name": "Ironwood Forest",
+    "description": "Ancient woods of black-iron oak. Goblin tribes have dug warrens beneath the roots.",
+    "level_min": 5,
+    "level_max": 12,
+    "enemy_pool": [
+      { "enemy_id": "goblin_scout", "weight": 35 },
+      { "enemy_id": "goblin_warrior", "weight": 35 },
+      { "enemy_id": "wolf", "weight": 20 },
+      { "enemy_id": "skeleton_archer", "weight": 10 }
+    ]
+  },
+  {
+    "id": "ember_peaks",
+    "name": "Ember Peaks",
+    "description": "Volcanic mountains where fire elementals dance over magma vents.",
+    "level_min": 10,
+    "level_max": 18,
+    "enemy_pool": [
+      { "enemy_id": "fire_elemental", "weight": 50 },
+      { "enemy_id": "bandit_thug", "weight": 25 },
+      { "enemy_id": "skeleton_archer", "weight": 25 }
+    ]
+  },
+  {
+    "id": "frostreach_tundra",
+    "name": "Frostreach Tundra",
+    "description": "A frozen wasteland; the dead do not stay buried here.",
+    "level_min": 15,
+    "level_max": 25,
+    "enemy_pool": [
+      { "enemy_id": "skeleton_archer", "weight": 40 },
+      { "enemy_id": "frost_elemental", "weight": 40 },
+      { "enemy_id": "goblin_warrior", "weight": 20 }
+    ]
+  }
+]
