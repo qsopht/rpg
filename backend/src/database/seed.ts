@@ -76,10 +76,12 @@ async function main() {
   }
 }
 
-main().catch((err) => {
-  console.error('[seed] failed', err);
-  process.exit(1);
-});
+main()
+  .then(() => process.exit(0))
+  .catch((err) => {
+    console.error('[seed] failed', err);
+    process.exit(1);
+  });
 
 /**
  * Find the content directory across deployment shapes:
