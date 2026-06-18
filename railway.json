@@ -5,7 +5,7 @@
     "dockerfilePath": "backend/Dockerfile"
   },
   "deploy": {
-    "startCommand": "node dist/database/migrate.js && node dist/main.js",
+    "startCommand": "node dist/database/migrate.js && node dist/database/seed.js && node dist/main.js",
     "healthcheckPath": "/health/ready",
     "healthcheckTimeout": 30,
     "restartPolicyType": "ON_FAILURE",
