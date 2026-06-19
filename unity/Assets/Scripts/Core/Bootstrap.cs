@@ -19,6 +19,11 @@ namespace Aetheria.Core
             var cfg = ApiConfig.Load();
             if (cfg == null) return;
 
+            // Persistent OAuth deep-link receiver — survives scene loads.
+            var deepLinks = new GameObject(nameof(DeepLinkHandler));
+            deepLinks.AddComponent<DeepLinkHandler>();
+            DontDestroyOnLoad(deepLinks);
+
             var storage = new TokenStorage();
             var api = new ApiClient(cfg, storage);
             var auth = new AuthService(api, storage);
@@ -32,6 +37,7 @@ namespace Aetheria.Core
             var marketplace = new MarketplaceService(api);
 
             ServiceLocator.Register(cfg);
+            ServiceLocator.Register(storage);
             ServiceLocator.Register(api);
             ServiceLocator.Register(auth);
             ServiceLocator.Register(characters);

@@ -8,6 +8,12 @@
             <engine:TextField name="displayName" label="Display name" />
             <engine:Toggle name="registerMode" label="New player? Register" style="margin-top:8px;"/>
             <engine:Button name="submit" text="Sign in" style="margin-top:16px;"/>
+            <engine:VisualElement style="flex-direction:row; align-items:center; margin-top:16px;">
+                <engine:VisualElement style="flex-grow:1; height:1px; background-color:rgba(255,255,255,0.2);"/>
+                <engine:Label text="or" style="margin:0 8px; opacity:0.6;"/>
+                <engine:VisualElement style="flex-grow:1; height:1px; background-color:rgba(255,255,255,0.2);"/>
+            </engine:VisualElement>
+            <engine:Button name="googleSignIn" text="Sign in with Google" style="margin-top:8px;"/>
             <engine:Label name="error" style="color:#ff7070; margin-top:8px; min-height:18px;"/>
         </engine:VisualElement>
     </engine:VisualElement>

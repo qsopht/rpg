@@ -6,7 +6,7 @@ namespace Aetheria.Core
     public class ApiConfig : ScriptableObject
     {
         [Header("REST")]
-        public string apiBaseUrl = "http://10.0.2.2:3000";
+        public string apiBaseUrl = "https://rpg-production-f47a.up.railway.app";
 
         [Header("WebSocket")]
         public string wsBaseUrl = "ws://10.0.2.2:3000";

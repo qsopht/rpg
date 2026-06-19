@@ -31,13 +31,29 @@ export interface AuthResult {
 
 @Injectable()
 export class AuthService {
-  private readonly google = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+  /** Verifier-only client (no secret) for id_token verification in /auth/google. */
+  private readonly googleVerifier = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
+
+  /** Full OAuth client (with secret) for the server-mediated code flow. */
+  private readonly googleOAuth = new OAuth2Client(
+    process.env.GOOGLE_CLIENT_ID,
+    process.env.GOOGLE_CLIENT_SECRET,
+    this.googleRedirectUri(),
+  );
+
+  /** Allowed mobile deep-link schemes that the callback may redirect to. */
+  private readonly allowedDeepLinkPrefixes = ['aetheria://'];
 
   constructor(
     @Inject(KNEX_TOKEN) private readonly db: Knex,
     private readonly repo: AuthRepository,
     private readonly jwt: JwtService,
   ) {}
+
+  private googleRedirectUri(): string {
+    const base = process.env.BACKEND_BASE_URL ?? 'http://localhost:3000';
+    return `${base}/auth/google/callback`;
+  }
 
   async register(dto: RegisterDto, meta: SessionMeta): Promise<AuthResult> {
     const existing = await this.repo.findUserByEmail(dto.email);
@@ -85,7 +101,7 @@ export class AuthService {
     if (!process.env.GOOGLE_CLIENT_ID) {
       throw new UnauthorizedException({ code: 'google_not_configured' });
     }
-    const ticket = await this.google
+    const ticket = await this.googleVerifier
       .verifyIdToken({ idToken, audience: process.env.GOOGLE_CLIENT_ID })
       .catch(() => null);
     const payload = ticket?.getPayload();
@@ -153,6 +169,62 @@ export class AuthService {
 
   async logout(userId: string): Promise<void> {
     await this.repo.revokeAllForUser(userId);
+  }
+
+  // -------- server-mediated Google OAuth (mobile-friendly) --------
+
+  /** Build the Google OAuth consent URL. State carries the validated deep link. */
+  async startGoogleOAuth(deepLinkUri: string): Promise<string> {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      throw new UnauthorizedException({ code: 'google_not_configured' });
+    }
+    this.assertAllowedDeepLink(deepLinkUri);
+    // Sign the deep link into a short-lived JWT and use it as `state` — that's
+    // both CSRF protection and a tamper-proof way to pass it through the round trip.
+    const state = await this.jwt.signAsync(
+      { uri: deepLinkUri },
+      { expiresIn: '10m' },
+    );
+    return this.googleOAuth.generateAuthUrl({
+      access_type: 'online',
+      include_granted_scopes: true,
+      prompt: 'select_account',
+      scope: ['openid', 'email', 'profile'],
+      state,
+    });
+  }
+
+  /** Exchange code → id_token, sign the user in, return the redirect target. */
+  async finishGoogleOAuth(
+    code: string,
+    state: string,
+    meta: SessionMeta,
+  ): Promise<AuthResult & { redirectUri: string }> {
+    if (!process.env.GOOGLE_CLIENT_ID || !process.env.GOOGLE_CLIENT_SECRET) {
+      throw new UnauthorizedException({ code: 'google_not_configured' });
+    }
+    let deepLinkUri: string;
+    try {
+      const decoded = await this.jwt.verifyAsync<{ uri: string }>(state);
+      deepLinkUri = decoded.uri;
+    } catch {
+      throw new UnauthorizedException({ code: 'invalid_state' });
+    }
+    this.assertAllowedDeepLink(deepLinkUri);
+
+    const { tokens } = await this.googleOAuth.getToken(code).catch((e: any) => {
+      throw new UnauthorizedException({ code: 'code_exchange_failed', message: e?.message });
+    });
+    if (!tokens.id_token) throw new UnauthorizedException({ code: 'no_id_token' });
+
+    const auth = await this.loginWithGoogle(tokens.id_token, meta);
+    return { ...auth, redirectUri: deepLinkUri };
+  }
+
+  private assertAllowedDeepLink(uri: string): void {
+    if (!uri || !this.allowedDeepLinkPrefixes.some((p) => uri.startsWith(p))) {
+      throw new UnauthorizedException({ code: 'invalid_deep_link' });
+    }
   }
 
   // -------- private --------

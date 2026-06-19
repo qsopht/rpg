@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+    Custom manifest that overrides Unity's default. Registers the `aetheria://` deep
+    link scheme so the OAuth callback from /auth/google/callback can wake the app.
+
+    Keep the rest minimal — Unity fills in package name, version code, etc. at build time.
+    The `UnityPlayerActivity` declaration here REPLACES Unity's, so we re-declare its
+    standard intent filters (MAIN/LAUNCHER) and add ours alongside.
+-->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          xmlns:tools="http://schemas.android.com/tools">
+
+    <application
+        android:icon="@mipmap/app_icon"
+        android:label="@string/app_name"
+        android:theme="@style/UnityThemeSelector">
+
+        <activity
+            android:name="com.unity3d.player.UnityPlayerActivity"
+            android:theme="@style/UnityThemeSelector"
+            android:exported="true"
+            android:launchMode="singleTask">
+
+            <!-- Standard Unity launcher -->
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+
+            <!-- Deep link: aetheria://oauth-callback?... from Google OAuth round trip -->
+            <intent-filter android:autoVerify="false">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="aetheria" android:host="oauth-callback" />
+            </intent-filter>
+
+            <meta-data android:name="unityplayer.UnityActivity" android:value="true" />
+        </activity>
+
+    </application>
+</manifest>
